@@ -1,0 +1,149 @@
+#include
+#include
+using namespace std;
+
+class Order {
+public:
+int jenisSepatu; // 1 Suede, 2 Knit, 3 Biasa
+int metodeBayar; // 1 Tunai, 2 Transfer, 3 QRIS
+int layanan; // 1 Deep, 2 Fast, 3 Treatment
+bool bayarDiAwal; // true = ya
+
+string getJenisSepatu() {
+    if (jenisSepatu == 1) return "Suede";
+    if (jenisSepatu == 2) return "Knit";
+    return "Biasa";
+}
+
+string getMetodeBayar() {
+    if (metodeBayar == 1) return "Tunai";
+    if (metodeBayar == 2) return "Transfer";
+    return "QRIS";
+}
+
+string getLayanan() {
+    if (layanan == 1) return "Deep Cleaning";
+    if (layanan == 2) return "Fast Cleaning";
+    return "Treatment Khusus";
+}
+
+void inputOrder() {
+    char pilih;
+
+    cout << "\n---------------------------------\n";
+    cout << "JENIS SEPATU\n";
+    cout << "---------------------------------\n";
+    cout << "1. Suede\n";
+    cout << "2. Knit\n";
+    cout << "3. Biasa\n";
+    cout << "Pilih: ";
+    cin >> jenisSepatu;
+
+    cout << "\n---------------------------------\n";
+    cout << "PEMBAYARAN AWAL\n";
+    cout << "---------------------------------\n";
+    cout << "Bayar di awal? (y/n): ";
+    cin >> pilih;
+    bayarDiAwal = (pilih == 'y' || pilih == 'Y');
+
+    cout << "\n---------------------------------\n";
+    cout << "METODE PEMBAYARAN\n";
+    cout << "---------------------------------\n";
+    cout << "1. Tunai\n";
+    cout << "2. Transfer\n";
+    cout << "3. QRIS\n";
+    cout << "Pilih: ";
+    cin >> metodeBayar;
+
+    cout << "\n---------------------------------\n";
+    cout << "JENIS LAYANAN\n";
+    cout << "---------------------------------\n";
+    cout << "1. Deep Cleaning\n";
+    cout << "2. Fast Cleaning\n";
+    cout << "3. Treatment Khusus\n";
+    cout << "Pilih: ";
+    cin >> layanan;
+}
+};
+
+// ===== FUNGSI CETAK STRUK =====
+void cetakStruk(ostream &out, Order orders[], int jumlahOrder, string status) {
+out << "====================================\n";
+out << " SOLE OFFICIAL LAUNDRY \n";
+out << " STRUK TRANSAKSI \n";
+out << "------------------------------------\n";
+out << "Total Order : " << jumlahOrder << "\n\n";
+
+out << "Detail Order:\n";
+for (int i = 0; i < jumlahOrder; i++) {
+    out << i + 1 << ". "
+        << "Sepatu: " << orders[i].getJenisSepatu()
+        << " | "
+        << orders[i].getLayanan()
+        << " | "
+        << orders[i].getMetodeBayar();
+
+    if (orders[i].bayarDiAwal) {
+        out << " | Bayar di awal";
+    }
+
+    out << "\n";
+}
+
+out << "\nStatus Pembayaran : " << status << "\n";
+out << "------------------------------------\n";
+out << "Terima kasih telah memakai jasa kami\n";
+out << "====================================\n";
+}
+
+int main() {
+// ===== HEADER PROGRAM =====
+cout << "====================================\n";
+cout << " SOLE OFFICIAL LAUNDRY \n";
+cout << " SISTEM PENDATAAN LAUNDRY SEPATU \n";
+cout << "====================================\n\n";
+
+const int MAX = 10;
+Order orders[MAX];
+int jumlahOrder = 0;
+char lanjut = 'y';
+
+// ===== INPUT ORDER =====
+while ((lanjut == 'y' || lanjut == 'Y') && jumlahOrder < MAX) {
+    cout << "\n====================================\n";
+    cout << "            ORDER #" << jumlahOrder + 1 << endl;
+    cout << "====================================\n";
+
+    orders[jumlahOrder].inputOrder();
+    jumlahOrder++;
+
+    cout << "\n---------------------------------\n";
+    cout << "Tambah order lagi? (y/n): ";
+    cin >> lanjut;
+}
+
+// ===== STATUS PEMBAYARAN AKHIR =====
+int statusBayar;
+cout << "\n====================================\n";
+cout << "        STATUS PEMBAYARAN AKHIR      \n";
+cout << "====================================\n";
+cout << "1. LUNAS\n";
+cout << "2. BELUM LUNAS\n";
+cout << "Pilih: ";
+cin >> statusBayar;
+
+string status = (statusBayar == 1) ? "LUNAS" : "BELUM LUNAS";
+
+// ===== CETAK STRUK =====
+ofstream file("struk_transaksi.txt");
+
+cout << "\n";
+cetakStruk(cout, orders, jumlahOrder, status);
+cetakStruk(file, orders, jumlahOrder, status);
+
+file.close();
+
+cout << "\nStruk berhasil disimpan ke file: struk_transaksi.txt\n";
+
+return 0;
+}
